@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block content %}
+<div class = "row" id="content">
+	<div class = "row" id="content">
+		<div class="col-md-1"></div>
+		<div class="col-md-10">
+			<div class="row text-center">
+				<h1 class = "styled-like-supalist"> {{li_2_edit.name}} </h1>
+				<h2 class = "styled-like-supalist  bold">EDIT THIS ENTRY !!!</h2>
+			<form action = "{{url_for('EditRow', list_id = li_2_edit.id, row_id = row_2_edit.id)}}" method = 'POST'>
+				<table class="table table-bordered"><!-- table-condensed-->
+					<thead>
+						<tr>
+							{% for h in headings %}
+							<th>{{h.name}}</th>
+							{% endfor %}
+						</tr>
+					</thead>
+
+			
+					<tbody>
+						<tr>{% for e in range(0, headings|length) %}	
+								{% if e < (entries|length) %}	
+							<td>
+
+								{% if (headings[e].entry_data_type == 2)  %}
+									<input type="date" class="form-control" id="exampleInputEmail1" name = "h_{{headings[e].name}}" value="{{entries[e][1].entry}}">
+								{% elif (headings[e].entry_data_type == 4) %}
+									<input type="time" class="form-control" id="exampleInputEmail1" name = "h_{{headings[e].name}}" value="{{entries[e][1].entry}}">
+								{% elif (headings[e].entry_data_type == 5) %}
+									<input type="text" class="form-control" id="exampleInputEmail1" name = "h_{{headings[e].name}}" value="{{entries[e][1].entry}}">									
+								{% elif (headings[e].entry_data_type == 1) or (headings[e].entry_data_type == 6) or (headings[e].entry_data_type == 7) %}
+									<input type="number" class="form-control" id="exampleInputEmail1" name = "h_{{headings[e].name}}" value="{{entries[e][1].entry}}">
+								{% elif (headings[e].entry_data_type == 3) %}
+								<!-- This is how I will be able to keep the correct item checked when editing: --> 
+									{% if entries[e][1].entry == True %}
+										<label>True/ Yes </label><input type="radio" class="form-control" id="exampleInputEmail1" name = "h_{{headings[e].name}}" value = "True" checked>
+										<label>False/ No</label><input type="radio" class="form-control" id="exampleInputEmail1" name = "h_{{headings[e].name}}" value = "False">
+										<!--<label>False/ No</label><input type="radio" class="form-control" id="exampleInputEmail1" name = "h_{{headings[e].name}}" value = "{{entries[e][1].entry}}" checked>	-->
+									{% else %}
+										<label>True/ Yes </label><input type="radio" class="form-control" id="exampleInputEmail1" name = "h_{{headings[e].name}}" value = "True" >
+										<label>False/ No</label><input type="radio" class="form-control" id="exampleInputEmail1" name = "h_{{headings[e].name}}" value = "False" checked>
+									{% endif %}
+								{% else %}
+									<input type="text" class="form-control" id="exampleInputEmail1" name = "h_{{headings[e].name}}" value="{{entries[e][1].entry}}">
+								{% endif %}								
+								<!--
+								<div class="form-group">
+								<input type="text" class="form-control" name = "h_{{headings[e].name}}" id="exampleInputEmail1" value="{{entries[e][1].entry}}">
+								<span class = "col-md-1"></span> -->
+								</div>
+							</td>
+								{% else %}
+							<td>
+
+
+								{% if (headings[e].entry_data_type == 2)  %}
+									<input type="date" class="form-control" id="exampleInputEmail1" name = "{{headings[e].name}}" >
+								{% elif (headings[e].entry_data_type == 4) %}
+									<input type="time" class="form-control" id="exampleInputEmail1" name = "{{headings[e].name}}" >
+								{% elif (headings[e].entry_data_type == 5) %}
+									<input type="text" class="form-control" id="exampleInputEmail1" name = "{{headings[e].name}}" >									
+								{% elif (headings[e].entry_data_type == 1) or (headings[e].entry_data_type == 6) or (headings[e].entry_data_type == 7) %}
+									<input type="number" class="form-control" id="exampleInputEmail1" name = "{{headings[e].name}}" placeholder="Input a number">
+								{% elif (headings[e].entry_data_type == 3) %}
+									<label></label><input type="radio" class="form-control" id="exampleInputEmail1" name = "{{headings[e].name}}" value = "True">
+									<label>False/ No</label><input type="radio" class="form-control" id="exampleInputEmail1" name = "{{headings[e].name}}" value = "False" checked>	
+								{% else %}
+									<input type="text" class="form-control" id="exampleInputEmail1" name = "{{headings[e].name}}" >
+								{% endif %}
+
+
+<!-- 
+								<div class="form-group">
+								<input type="text" class="form-control" name = "{{headings[e].name}}" id="exampleInputEmail1" placeholder="Novyet,{{e}},-{{entries|length}}">
+								<span class = "col-md-1"></span> -->
+								</div>
+							</td>
+								{% endif %}
+							{% endfor %}
+						</tr>
+					</tbody>
+				</table>
+				<br>
+
+			</div>
+			<div class="row"><br>
+				<a href="{{url_for('QueryList', list_id = li_2_edit.id)}}" class = "btn btn-primary col-md-2">CANCEL</a><span class = "col-md-8"></span>
+				<button type="submit" class="btn btn-primary col-md-2">Submit Edit</button>
+			</div>
+			</form>
+		</div>
+		<div class="col-md-1"></div>
+	</div>
+</div>
+{% endblock %}

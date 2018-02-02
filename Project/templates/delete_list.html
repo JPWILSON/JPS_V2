@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<div class = "row" id="content">
+	<div class = "row" id="content">
+		<div class="col-md-1"></div>
+		<div class="col-md-10">
+
+	
+			<div class="row">
+				<div class="row text-center"><h2>Are you sure you want to DELETE the list: "{{li_2_del.name}}" ?</h2></div><br>
+				<p>This will also delete all rows, headings and entries related to this list!</p>
+				<h3>NOTE: This CANNOT be undone</h3>
+
+				<div class="row">
+					<form action = "{{url_for('DeleteList', list_id = list_id)}}" method = 'POST'>
+						<span class = "col-md-5"></span><button type="submit" class="btn btn-primary col-md-2">DELETE FOREVER</button><span class = "col-md-3">
+					</form><br>
+				</div><br>
+
+				<table class="table table-bordered"><!-- table-condensed-->
+					<thead>
+						<tr>
+							<th>All these columns will be deleted: </th>
+							{% for h in headings2del %}
+							<th>{{h.name}}</th>
+							{% endfor %}
+						</tr>
+						<tr>
+							<td>No of rows (with all their data entries) to be deleted: </td>
+							<td colspan="{{headings2del|length}}">{{no_rows_2_del}}</td>
+						</tr>
+					</thead>
+				</table>
+
+			</div>
+		</div>
+		<div class="col-md-1"></div>
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <title>Supalist</title>
+  <link rel= "stylesheet" type="text/css" href= "{{ url_for('static',filename='css/style.css') }}">
+  <link rel= "icon" href= "{{ url_for('static',filename='favicon.ico') }}">
+  <!-- Bootstrap 
+  <link href="{{ url_for('static',filename='css/bootstrap.min.css') }}" rel="stylesheet"> -->
+  <link href="https://fonts.googleapis.com/css?family=Indie+Flower|Roboto+Condensed" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <style type="text/css">
+  hr{
+  border-top: 1px solid #000000;
+}
+
+  td{
+    font-weight: normal;
+  }
+  th{
+    font-weight: bold;
+  }
+
+.bg { 
+  /*background-color: #000000;*/
+  background: -webkit-radial-gradient(#ffff1a, #1a1aff, #eeeeee); /* Safari 5.1 to 6.0 */
+  background: -o-radial-gradient(#eee23e, #f4f0ad, #eeeeee); /* For Opera 11.6 to 12.0 */
+  background: -moz-radial-gradient(#eee23e, #f4f0ad, #eeeeee); /* For Firefox 3.6 to 15 */
+  background: radial-gradient(#eee23e, #f4f0ad, #eeeeee); /* Standard syntax (must be last) */
+
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  height: 1900px;
+
+}
+
+.bold{
+  font-weight:bold;
+}
+
+.explanations{
+  line-height: 170%;
+}
+
+.CONTAINER{
+  height: 1900px;
+}
+
+.table_scroll{
+  overflow-x: scroll;
+  white-space: nowrap;
+}
+
+
+.slogan{
+  font-size: 14px;
+  font-family: 'Roboto Condensed', sans-serif;    }
+
+  .styled-like-supalist{
+    font-family: 'Indie Flower', cursive;
+  }
+
+
+
+  #ads {
+    font-size: 82px;
+    font-family: 'Roboto Condensed', sans-serif;
+    background: #eee23e; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(bottom,rgba(255,0,0,0),rgba(255,0,0,1)); /*Safari 5.1-6*/
+    background: -o-linear-gradient(top,rgba(255,0,0,0),rgba(238, 226, 62,1)); /*Opera 11.1-12*/
+    background: -moz-linear-gradient(top,rgba(255,0,0,0),rgba(238, 226, 62,1)); /*Fx 3.6-15*/
+    background: linear-gradient(to top, rgba(255,0,0,0), rgba(238, 226, 62,1)); /*Standard*/
+
+    /*margin-left: 10%;  */
+  }
+  
+  #ads_hdng{
+    font-family: 'Indie Flower', cursive;
+    font-size: 25px;
+  }
+
+  #adverts_here{
+    font-size: 12px;
+  }
+
+  #content{
+    background-color: white;
+    /*background: rgba(238, 235, 235,0.45);     #eee23e*/
+    border-radius: 8px;
+    font-family: verdana;
+  }
+
+
+  #info_spacer{
+    height: 80px;
+  }
+  #nav{
+    font-size: 13px;
+    font-family: 'Roboto Condensed', sans-serif;
+  }
+
+  #supalist{
+    /*font-family: lucida-grande;   */
+    font-family: 'Indie Flower', cursive;
+    font-size: 62px;
+    
+  }
+
+  #smaller{      font-size: 11px;
+    font-family: 'Roboto Condensed', sans-serif; 
+    padding:3px;   
+  }
+
+
+  .ps-container .ps-scrollbar-x-rail {
+  top: 3px;
+  bottom: auto; /* If using `top`, there shouldn't be a `bottom`. */
+}
+
+  </style>
+
+
+
+
+</head>
+<body>
+  <div class="CONTAINER"> <!-- CONTAINER ELEMENT-->
+    <div class="row">
+
+      <div class="col-md-10 bg"> <!-- START OF COL-10 --> 
+
+        <div class="row">   <!-- HEADER ROW  -->
+          <div class="col-md-5 text-center" id="top-left">
+            <div class="row">
+              <h1 class= "text-center" id= "supalist"><a href="{{url_for('Home')}}">SUPALIST</a></h1>
+            </div>
+            <div class="row slogan">
+              <div class="col-md-1"></div>
+              <div class="col-md-11">
+                <p>
+                  <b>THE WORLD IS DATA &nbsp&nbsp|&nbsp&nbsp WE WANT IT IN LISTS &nbsp&nbsp|&nbsp&nbsp BILLIONS & BILLIONS OF LISTS<b>
+                </p>
+              </div>
+            </div>
+            <div class="row">&nbsp</div>
+          </div>
+          <div class="col-md-3">
+            <div class="row" id="info_spacer"></div>
+            {% if logged_in == true %}
+            <a href="{{url_for('Home')}}">Signed In as: {{un}}</a>
+            {% endif %}
+          </div>
+          <div class="col-md-3">
+              <div class="row" id="info_spacer"></div>
+              <div class="row text-center " id = "nav"> 
+                    <!--<div class="col-md-2">Notifications</div>
+                    <div class="col-md-2">Comments</div>
+                    <div class="col-md-2">Profile</div><div class="col-md-2">
+                    <div class="col-md-2"><a href="{{ url_for('gdisconnect') }}">Logout</a></div>-->
+                                       
+                    <a href="{{url_for('About')}}">About</a>
+                    <span class = "col-md-2"></span>
+                    {% if logged_in == true %}
+                      <div class="col-md-2"><a href="{{ url_for('gdisconnect') }}">Logout</a></div>
+                    {% else %}
+                      <div class="col-md-2"><a href="{{ url_for('showLogin') }}">Login</a></div>
+                    {% endif %}
+                    <span class = "col-md-2"></span>
+                    <div class="col-md-2"><a href="mailto:someone@example.com?Subject=Hello%20again" target="_top">Contact</a></div>
+                    <span class = "col-md-2"></span>
+              </div>
+          </div>
+          <div class="col-md-1"></div>
+        </div> <!-- END OF HEADER ROW  -->
+
+        <div class="row"> <!-- BODY ROW  -->
+          <div class="col-md-1"></div>
+            <div class="col-md-10" id="content">
+                  {% block content %}
+                  <!--  <p>This is content for the main page</p>-->
+                  {% endblock%}
+            </div>
+            <div class="col-md-1"></div>
+
+        </div>  <!-- END OF BODY ROW  -->
+
+      </div>  <!-- END OF COL-10 --> 
+
+      <div class="col-md-2 text-center" id="ads"> <!-- ADS PANEL-->
+        <h1 id="ads_hdng"><em>ADVERTISEMENTS</em></h1>  
+          <p id="adverts_here">
+            (We'll never sneak them into the lists.)
+          </p>
+        <div class="Adwords" id = "Adwords"></div>
+      </div>
+
+
+        </div> <!-- END - CONTAINER ELEMENT-->
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
+        <div class = "footer">
+          <p>&copy supalist.co</p>
+        </div>
+
+      </body>
+      </html>
