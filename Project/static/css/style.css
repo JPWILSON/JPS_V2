@@ -1,0 +1,109 @@
+hr{
+  border-top: 1px solid #000000;
+}
+
+  td{
+    font-weight: normal;
+  }
+  th{
+    font-weight: bold;
+  }
+
+.bg { 
+  /*background-color: #000000;*/
+  background: -webkit-radial-gradient(#ffff1a, #1a1aff, #eeeeee); /* Safari 5.1 to 6.0 */
+  background: -o-radial-gradient(#eee23e, #f4f0ad, #eeeeee); /* For Opera 11.6 to 12.0 */
+  background: -moz-radial-gradient(#eee23e, #f4f0ad, #eeeeee); /* For Firefox 3.6 to 15 */
+  background: radial-gradient(#eee23e, #f4f0ad, #eeeeee); /* Standard syntax (must be last) */
+
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  height: 1900px;
+
+}
+
+.bold{
+  font-weight:bold;
+}
+
+.explanations{
+  line-height: 170%;
+}
+
+.CONTAINER{
+  height: 1900px;
+}
+
+.table_scroll{
+  overflow-x: scroll;
+  white-space: nowrap;
+}
+
+
+.slogan{
+  font-size: 14px;
+  font-family: 'Roboto Condensed', sans-serif;    }
+
+  .styled-like-supalist{
+    font-family: 'Indie Flower', cursive;
+  }
+
+
+
+  #ads {
+    font-size: 82px;
+    font-family: 'Roboto Condensed', sans-serif;
+    background: #eee23e; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(bottom,rgba(255,0,0,0),rgba(255,0,0,1)); /*Safari 5.1-6*/
+    background: -o-linear-gradient(top,rgba(255,0,0,0),rgba(238, 226, 62,1)); /*Opera 11.1-12*/
+    background: -moz-linear-gradient(top,rgba(255,0,0,0),rgba(238, 226, 62,1)); /*Fx 3.6-15*/
+    background: linear-gradient(to top, rgba(255,0,0,0), rgba(238, 226, 62,1)); /*Standard*/
+
+    /*margin-left: 10%;  */
+  }
+  
+  #ads_hdng{
+    font-family: 'Indie Flower', cursive;
+    font-size: 25px;
+  }
+
+  #adverts_here{
+    font-size: 12px;
+  }
+
+  #content{
+    background-color: white;
+    /*background: rgba(238, 235, 235,0.45);     #eee23e*/
+    border-radius: 8px;
+    font-family: verdana;
+  }
+
+
+  #info_spacer{
+    height: 80px;
+  }
+  #nav{
+    font-size: 13px;
+    font-family: 'Roboto Condensed', sans-serif;
+  }
+
+  #supalist{
+    /*font-family: lucida-grande;   */
+    font-family: 'Indie Flower', cursive;
+    font-size: 62px;
+    
+  }
+
+  #smaller{      font-size: 11px;
+    font-family: 'Roboto Condensed', sans-serif; 
+    padding:3px;   
+  }
+
+
+  .ps-container .ps-scrollbar-x-rail {
+  top: 3px;
+  bottom: auto; /* If using `top`, there shouldn't be a `bottom`. */
+}
