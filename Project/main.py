@@ -423,11 +423,13 @@ def QueryList(list_id):
 		deletable_l = True
 
 	for row in rows:
+		#row_entries[row.id] = session.query(TextEntry).filter_by(row_id = row.id).order_by(TextEntry.heading_id).all()
 		row_entries[row.id] = session.query(TextEntry).filter_by(row_id = row.id).order_by(TextEntry.heading_id).all()
 		for e in li_of_dtypes[1:]:
 			for i in (session.query(e).filter_by(row_id = row.id).all()):
 				row_entries[row.id].append(i)
 		(row_entries[row.id]).sort(key=lambda x: int(x.heading_id))
+		#(row_entries[row.id]).sort(key=lambda x: int(x.entry))   - not working
 	return render_template('view.html', list = list_to_view, h_items = heading_items, rows = rows, 
 		row_entries = row_entries, lid = list_id, data_types_str = data_types_str, logged_in=logged_in, un=un, deletable_l = deletable_l)
 	#return "A single list that you can view or inspect/query (this should be the most important\
