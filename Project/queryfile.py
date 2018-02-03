@@ -10,22 +10,32 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind = engine)
 session = DBSession()
 """
+a = 3 
+print type(a)
+b = float(a)
+print type(b)
+
+
+
+"""
 a = 1
 b = "This is a string"
 d = "hi"
-c = int(d)
+#c = int(d)
+e = 198.23
 di = []
 di.append(a)
 di.append(b)
-di.append(c)
+#di.append(c)
 di.append(d)
+di.append(e)
 print di
 for e in di:
-	if type(e) == int:
-		print "So its an integer!"
+	if type(e) == float:
+		print "So its an floating pt no!"
 	else:
-		print "Nope"
-"""
+		print "Nope it's a: ", type(e)
+
 
 li = session.query(List).all()
 

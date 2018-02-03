@@ -610,8 +610,11 @@ def AddRow(list_id):
 				if type(int(form_val)) != int:
 					form_val = 0
 			elif str(stri)[-11:-2] == "woDecimal" or str(stri)[-11:-2] == "geDecimal":
-				if form_val == '' or form_val == ' ':
+				if form_val == '' or form_val == ' ' or type(float(form_val)) != float:
 					form_val = 0.00
+				else:
+					form_val = float(form_val)
+					print form_val
 			elif str(stri)[-11:-2] == "TextEntry":
 				if type(form_val) != str:
 					#print "Form val type: ", type(form_val)

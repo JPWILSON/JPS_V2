@@ -302,7 +302,7 @@ class LargeDecimal(Base):
 	__tablename__ = 'precision_num'
 
 	id = Column(Integer, primary_key=True) 
-	entry = Column(Numeric(precision=20, scale=20), nullable = False)
+	entry = Column(Numeric(precision=20, scale=3), nullable = False)
 	votes = Column(Integer, nullable = True)
 
 	heading_id = Column(Integer, ForeignKey('heading.id'))
