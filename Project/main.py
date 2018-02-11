@@ -31,6 +31,7 @@ app = Flask(__name__)
 
 CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
+	#open(r'/var/www/supalist/supalist/client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Supalist_V1"
 
 
@@ -79,6 +80,7 @@ def gconnect():
     try:
         # Upgrade the authorization code into a credentials object
         oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
+        #oauth_flow = flow_from_clientsecrets(r'/var/www/supalist/supalist/client_secrets.json', scope='')
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
     except FlowExchangeError:
@@ -312,9 +314,12 @@ def ListDetails(list_id):
 		un = login_session['username']
 
 	li_2_detail = session.query(List).filter_by(id = list_id).one()
+	creator = session.query(User).filter_by(id = li_2_detail.user_id).one()
+	creators_name = creator.user_name
 	num_headings = len(session.query(HeadingItem).filter_by(list_id = list_id).order_by(HeadingItem.id.asc()).all())
 	num_entries = len(session.query(Row).filter_by(list_id = list_id).order_by(Row.id.asc()).all())
-	return render_template('list_details.html', li_2_detail = li_2_detail, num_headings = num_headings, num_entries = num_entries, logged_in=logged_in, un=un)
+	return render_template('list_details.html', li_2_detail = li_2_detail, num_headings = num_headings, num_entries = num_entries, 
+		logged_in=logged_in, un=un, creators_name=creators_name)
 
 
 @app.route('/<int:list_id>/edit/', methods = ['GET', 'POST'])
@@ -396,8 +401,15 @@ def DeleteList(list_id):
 			headings2del = headings2del, no_rows_2_del=len(rows_2_del), logged_in=logged_in, un=un)
 	return "Are you sure you want to delete this list? (only certain privileges will allow you to delete a list? - or never?) list{}".format(list_id)
 
-@app.route('/<int:list_id>/')
+#The following global variables are for ordering the row entries in a list
+order_by_heading = 0 #Which heading to order by
+rev = 0              #Whether to order ascending or descending
+
+@app.route('/<int:list_id>/', methods = ['GET', 'POST'])
 def QueryList(list_id):
+
+	global order_by_heading
+	global rev
 
 #Logged in logic and rules (permissions, etc)
 	logged_in = False
@@ -430,8 +442,17 @@ def QueryList(list_id):
 				row_entries[row.id].append(i)
 		(row_entries[row.id]).sort(key=lambda x: int(x.heading_id))
 		#(row_entries[row.id]).sort(key=lambda x: int(x.entry))   - not working
-	return render_template('view.html', list = list_to_view, h_items = heading_items, rows = rows, 
-		row_entries = row_entries, lid = list_id, data_types_str = data_types_str, logged_in=logged_in, un=un, deletable_l = deletable_l)
+
+	#The line below converts the dictionary into a list of tuples where tuple is len2 1st item key, item 2 is a list of data entry objects
+	sorted_rows = sorted(row_entries.items(), key = lambda x: x[1][order_by_heading].entry, reverse = rev)
+	if request.method == 'POST':
+		order_by_heading = int(request.form["heading"][:1])-1
+		rev = int(request.form["heading"][1:])
+		return redirect(url_for('QueryList', list_id = list_id))
+	else:
+		return render_template('view.html', list = list_to_view, h_items = heading_items, rows = rows, 
+								lid = list_id, data_types_str = data_types_str, logged_in=logged_in, 
+								un=un, deletable_l = deletable_l, sorted_rows = sorted_rows)
 	#return "A single list that you can view or inspect/query (this should be the most important\
 	#feature, and \n it is from here that you would add to the list (edit). list{}".format(list_id)
 
