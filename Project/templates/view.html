@@ -73,7 +73,7 @@
 			<a href="{{url_for('AddRow', list_id = lid)}}" class = "btn btn-primary col-md-2">Add Entry</a><span class = "col-md-1"></span>
 			<a href="{{url_for('EditList', list_id = lid)}}" class = "btn btn-primary col-md-2">Edit List</a><span class = "col-md-1"></span>
 			{% if deletable_l == true %}
-				<a href="{{url_for('DeleteList', list_id = lid)}}" class = "btn btn-primary col-md-2">DELETE List</a><span class = "col-md-1"></span>
+				<a href="{{url_for('DeleteList', list_id = lid)}}" class = "btn btn-primary col-md-2">Delete List</a><span class = "col-md-1"></span>
 			{% else %}
 				<div class="popup col-md-2" onclick="myFunction()">
 					<a href="#" class = "btn btn-primary">DELETE List</a><span class = "col-md-1"></span>	
@@ -86,7 +86,7 @@
 			<a href="{{url_for('showLogin')}}" class = "btn btn-primary col-md-2">Add Column</a><span class = "col-md-1"></span>
 			<a href="{{url_for('showLogin')}}" class = "btn btn-primary col-md-2">Add Entry</a><span class = "col-md-1"></span>
 			<a href="{{url_for('showLogin')}}" class = "btn btn-primary col-md-2">Edit List (& Cols)</a><span class = "col-md-1"></span>
-			<a href="{{url_for('showLogin')}}" class = "btn btn-primary col-md-2">DELETE List</a><span class = "col-md-1"></span>
+			<a href="{{url_for('showLogin')}}" class = "btn btn-primary col-md-2">Delete List</a><span class = "col-md-1"></span>
 		</div>            
     {% endif %} 
 
