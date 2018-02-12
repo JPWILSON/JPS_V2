@@ -199,14 +199,6 @@ def gdisconnect():
 
 
 
-
-
-
-
-
-
-
-
 @app.route('/')
 @app.route('/home/', methods = ['GET', 'POST'])
 def Home():
@@ -621,6 +613,7 @@ def AddRow(list_id):
 		for i in range(0, len(heading_items)):
 
 			form_val = request.form["name_{}".format(i)]
+			print "The form value is: ", form_val
 			stri = data_types[heading_items[i].entry_data_type]
 			#print str(stri)[-11:-2], form_val
 			if str(stri)[-11:-2] == "DateEntry":
@@ -635,12 +628,13 @@ def AddRow(list_id):
 					form_val = 0.00
 				else:
 					form_val = float(form_val)
-					print form_val
 			elif str(stri)[-11:-2] == "TextEntry":
 				if type(form_val) != str:
 					#print "Form val type: ", type(form_val)
 					form_val = str(form_val)
 					#print "Form val type: ", type(form_val)
+			elif str(stri)[-11:-2] == "TrueFalse":
+				form_val = bool(form_val)
 
 			#print "new form val: ", form_val
 			e1 = stri(entry=form_val, votes=0, heading = heading_items[i] , lists =new_row, user = getUser())
@@ -684,7 +678,9 @@ def EditRow(list_id, row_id):
 		for i in range(0, len(headings)):
 			if i < len(entries):
 				namer = str(headings[i].name)
+				print "Checking the input before pulling from form: ", entries[i][1].entry, type(entries[i][1].entry)
 				entries[i][1].entry = request.form["h_{}".format(namer)]
+				print "Checking the input here after pulling from form: ", entries[i][1].entry, type(entries[i][1].entry)
 				dtype_A = data_types[headings[i].entry_data_type]
 				#print "namer is: ", namer, "This is the data type: ",data_types[headings[i].entry_data_type], dtype_A, "Main part: ",str(dtype_A)[-11:-2]
 				if str(dtype_A)[-11:-2] == "egerEntry":
@@ -695,12 +691,48 @@ def EditRow(list_id, row_id):
 				elif str(dtype_A)[-11:-2] == "woDecimal" or str(dtype_A)[-11:-2] == "geDecimal":
 					if entries[i][1].entry == '' or entries[i][1].entry == ' ':
 						entries[i][1].entry = 0.00
+
+				elif str(dtype_A)[-11:-2] == "TrueFalse":
+					print "Checking the input before boolifying: ", entries[i][1].entry, type(entries[i][1].entry)
+					if str(entries[i][1].entry) == 'False':
+						entries[i][1].entry = False
+					else:
+						entries[i][1].entry = bool(entries[i][1].entry)
+					print "so the boolean input from the form after boolifying is: ", entries[i][1].entry, type(entries[i][1].entry)
+				"""		
+				elif str(dtype_A)[-11:-2] == "TrueFalse":
+				form_val = bool(form_val)"""
 				#data_types[i]
 				session.add(entries[i][1])
 				session.commit()
 			else:
+				type_of_entry = str(data_types[headings[i].entry_data_type])
+				print "-------------------The enry data type is: ", type_of_entry, type_of_entry[-11:-2]
+				form_val = request.form['{}'.format(headings[i].name)]
+				print "So, the value inputted is: ", form_val, type(form_val)
+				if type_of_entry[-11:-2] == "DateEntry":
+				#print "True"
+					if len(form_val) < 1 or str(form_val)[4] != "-" or form_val== '':
+						form_val = datetime.strptime('0001-01-01' , '%Y-%m-%d')
+				elif type_of_entry[-11:-2] == "egerEntry":
+					if type(int(form_val)) != int:
+						form_val = 0
+				elif type_of_entry[-11:-2] == "woDecimal" or type_of_entry[-11:-2] == "geDecimal":
+					if form_val == '' or form_val == ' ' or type(float(form_val)) != float:
+						form_val = 0.00
+					else:
+						form_val = float(form_val)
+				elif type_of_entry[-11:-2] == "TextEntry":
+					if type(form_val) != str:
+						#print "Form val type: ", type(form_val)
+						form_val = str(form_val)
+						#print "Form val type: ", type(form_val)
+				elif type_of_entry[-11:-2] == "TrueFalse":
+					form_val = bool(form_val)
+					print "It is a: ", form_val
 				e_type = li_of_dtypes[headings[i].entry_data_type] #This section is for entries that are blank but there is a heading for them... 
-				new_ent = e_type(entry = request.form['{}'.format(headings[i].name)],votes=0, heading = headings[i] , lists =row_2_edit)
+				new_ent = e_type(entry = form_val,votes=0, heading = headings[i] , lists =row_2_edit)
+
 				session.add(new_ent)
 				session.commit()
 

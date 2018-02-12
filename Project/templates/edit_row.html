@@ -34,12 +34,12 @@
 								{% elif (headings[e].entry_data_type == 3) %}
 								<!-- This is how I will be able to keep the correct item checked when editing: --> 
 									{% if entries[e][1].entry == True %}
-										<label>True/ Yes </label><input type="radio" class="form-control" id="exampleInputEmail1" name = "h_{{headings[e].name}}" value = "True" checked>
-										<label>False/ No</label><input type="radio" class="form-control" id="exampleInputEmail1" name = "h_{{headings[e].name}}" value = "False">
-										<!--<label>False/ No</label><input type="radio" class="form-control" id="exampleInputEmail1" name = "h_{{headings[e].name}}" value = "{{entries[e][1].entry}}" checked>	-->
+										<label>True/ Yes </label>&nbsp<input type="radio" name = "h_{{headings[e].name}}" value = True checked><br>
+										<label>False/ No</label>&nbsp<input type="radio" name = "h_{{headings[e].name}}" value = False>
+										<!--<label>False/ No</label><input type="radio" class="form-control" name = "h_{{headings[e].name}}" value = "{{entries[e][1].entry}}" checked>	-->
 									{% else %}
-										<label>True/ Yes </label><input type="radio" class="form-control" id="exampleInputEmail1" name = "h_{{headings[e].name}}" value = "True" >
-										<label>False/ No</label><input type="radio" class="form-control" id="exampleInputEmail1" name = "h_{{headings[e].name}}" value = "False" checked>
+										<label>True/ Yes </label>&nbsp<input type="radio"  name = "h_{{headings[e].name}}" value = True><br>
+										<label>False/ No</label>&nbsp<input type="radio"  name = "h_{{headings[e].name}}" value = False checked>
 									{% endif %}
 								{% else %}
 									<input type="text" class="form-control" id="exampleInputEmail1" name = "h_{{headings[e].name}}" value="{{entries[e][1].entry}}">
