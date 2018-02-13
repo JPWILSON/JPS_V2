@@ -158,10 +158,22 @@
 				</thead>
 				<tbody>
 					{% for item in sorted_rows %}
-					<tr>
+					<tr> 
 						{% if logged_in == true %}
-							<td><a href="{{url_for('DeleteRow', list_id = lid, row_id = item[0])}}" >Del</a></td>
-							<td><a href="{{url_for('EditRow', list_id = lid, row_id = item[0])}}" >Edit</a></td>
+
+						   <!-- THIS BLOCK DETERMINES WHETHER THE LOGGED IN USER CREATED THE ROW, TO DETERMINE IF THEY CAN DELETE THE ROW OR NOT...  <span class="col-md-2" >   </span>-->
+								{% if row_creator_logged_in[loop.index-1] == True %}
+										<td><a href="{{url_for('DeleteRow', list_id = lid, row_id = item[0])}}" class="text-right">Del</a></td>
+								{% else %}
+									<td>
+										<div class="popup col-md-2" onclick="rowDel()">
+											<a href="#" class="text-right">Del</a>	
+											<span class="popuptext" id="rowPopup">&nbsp &nbsp  &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp  Not owner!</span>
+										</div>
+									</td>
+								{% endif %}
+								<td><a href="{{url_for('EditRow', list_id = lid, row_id = item[0])}}" >Edit</a></td>
+
 						{% else %}
 							<td><a href="{{url_for('showLogin')}}" >Del</a></td>
 							<td><a href="{{url_for('showLogin')}}" >Edit</a></td>
@@ -169,7 +181,6 @@
 						{% for e in item[1] %}
 							<td>{{e.entry}}</td>
 						{% endfor %}
-						
 					</tr>
 					{% endfor %}
 				</tbody>
@@ -186,6 +197,12 @@
 // When the user clicks on div, open the popup
 function myFunction() {
     var popup = document.getElementById("myPopup");
+    popup.classList.toggle("show");
+}
+
+
+function rowDel() {
+    var popup = document.getElementById("rowPopup");
     popup.classList.toggle("show");
 }
 </script>

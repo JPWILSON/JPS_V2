@@ -10,11 +10,19 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind = engine)
 session = DBSession()
 """
-a = 3 
-print type(a)
-b = float(a)
-print type(b)
+li = []
+a = "horse"
+b = 2
+c ='r'
 
+li.append(c)
+li.append(b)
+li.append(a)
+
+for i in li:
+	print i
+
+print len(li), "is its length"
 
 
 """

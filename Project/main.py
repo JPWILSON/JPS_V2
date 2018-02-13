@@ -426,6 +426,8 @@ def QueryList(list_id):
 	if owner.user_name == un:
 		deletable_l = True
 
+
+
 	for row in rows:
 		#row_entries[row.id] = session.query(TextEntry).filter_by(row_id = row.id).order_by(TextEntry.heading_id).all()
 		row_entries[row.id] = session.query(TextEntry).filter_by(row_id = row.id).order_by(TextEntry.heading_id).all()
@@ -437,6 +439,20 @@ def QueryList(list_id):
 
 	#The line below converts the dictionary into a list of tuples where tuple is len2 1st item key, item 2 is a list of data entry objects
 	sorted_rows = sorted(row_entries.items(), key = lambda x: x[1][order_by_heading].entry, reverse = rev)
+
+	#Logic for deleting a row entry: 
+	row_creator_logged_in = []
+	for r in sorted_rows:
+		row2check = session.query(Row).filter_by(id = r[0]).one()
+		row_creator_id = row2check.user_id
+		row_creator = session.query(User).filter_by(id = row_creator_id).one()
+		if row_creator.user_name == un:
+			row_creator_logged_in.append(True)
+		else:
+			row_creator_logged_in.append(False)
+
+
+
 	if request.method == 'POST':
 		order_by_heading = int(request.form["heading"][:1])-1
 		rev = int(request.form["heading"][1:])
@@ -444,7 +460,8 @@ def QueryList(list_id):
 	else:
 		return render_template('view.html', list = list_to_view, h_items = heading_items, rows = rows, 
 								lid = list_id, data_types_str = data_types_str, logged_in=logged_in, 
-								un=un, deletable_l = deletable_l, sorted_rows = sorted_rows)
+								un=un, deletable_l = deletable_l, sorted_rows = sorted_rows, 
+								row_creator_logged_in = row_creator_logged_in)
 	#return "A single list that you can view or inspect/query (this should be the most important\
 	#feature, and \n it is from here that you would add to the list (edit). list{}".format(list_id)
 
