@@ -163,7 +163,11 @@
 
 						   <!-- THIS BLOCK DETERMINES WHETHER THE LOGGED IN USER CREATED THE ROW, TO DETERMINE IF THEY CAN DELETE THE ROW OR NOT...  <span class="col-md-2" >   </span>-->
 								{% if row_creator_logged_in[loop.index-1] == True %}
-										<td><a href="{{url_for('DeleteRow', list_id = lid, row_id = item[0])}}" class="text-right">Del</a></td>
+									<td>
+										<div class="col-md-2">
+											<a href="{{url_for('DeleteRow', list_id = lid, row_id = item[0])}}" class="text-right">Del</a>
+										</div>
+									</td>
 								{% else %}
 									<td>
 										<div class="popup col-md-2" onclick="rowDel()">
