@@ -45,11 +45,8 @@ data_types ={}
 for i in range(0,8):
 	data_types[i] = li_of_dtypes[i]
 #This is for when I need to access the TEXT (strings) of the different data types: 
+#Note - these should be removed, its ridiculous
 li_of_dtypes_str = ["TextEntry","IntegerEntry","DateEntry","TrueFalse","TimeEntry","Duration","TwoDecimal","LargeDecimal"]
-data_types_str ={}
-for i in range(0,8):
-	data_types_str[i] = li_of_dtypes_str[i]
-
 
 #data_types_tuple = [(0, 'TextEntry'),(1,'IntegerEntry'),(2,'DateEntry'),(3,'DateEntry'),(4,'TrueFalse'),(5,'TimeEntry'),(6, 'Duration'),(7,'TwoDecimal'),(8,'LargeDecimal')]
 data_types_tuple = [(0, 'TextEntry'),(1,'IntegerEntry'),(2,'DateEntry'),(3,'TrueFalse'),(4,'TimeEntry'),(5, 'Duration'),(6,'TwoDecimal'),(7,'LargeDecimal')]
@@ -459,7 +456,7 @@ def QueryList(list_id):
 		return redirect(url_for('QueryList', list_id = list_id))
 	else:
 		return render_template('view.html', list = list_to_view, h_items = heading_items, rows = rows, 
-								lid = list_id, data_types_str = data_types_str, logged_in=logged_in, 
+								lid = list_id, logged_in=logged_in, 
 								un=un, deletable_l = deletable_l, sorted_rows = sorted_rows, 
 								row_creator_logged_in = row_creator_logged_in)
 	#return "A single list that you can view or inspect/query (this should be the most important\
@@ -656,7 +653,7 @@ def AddRow(list_id):
 		flash("Well done! You created a new row with ID: {}.".format(new_row.id))
 		return redirect(url_for('QueryList', list_id = list_id))
 	else:
-		return render_template('add_row.html', list_id = list_id, h_items = heading_items, dt_tr = data_types_str,
+		return render_template('add_row.html', list_id = list_id, h_items = heading_items, dt_tr = li_of_dtypes_str,
 			list = list_to_add_to, logged_in=logged_in, un=un)
 	#return "Add a new row to your list. That is, a new entry (and therefore increase the usefulness of your list with id: {}). ".format(list_id)
 
