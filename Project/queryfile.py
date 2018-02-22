@@ -10,12 +10,23 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind = engine)
 session = DBSession()
 """
-a = '1500000000.00'
-print type(a)
-b = float(a)
-print type(b)
-c = int(b)
-print type(c), c
+li = []
+li.append(1)
+
+
+li.append((3,"four"))
+
+[li.append(i) for i in range(0,11)]
+
+print li 
+
+for i in li:
+	if type(i) == int:
+		if i%2 == 0:
+			print "about to remove: ", i
+			li.remove(i)
+
+print "Now, the list is:: ", li
 
 """
 a = 1

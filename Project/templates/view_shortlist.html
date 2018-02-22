@@ -59,7 +59,6 @@
     from {opacity: 0;}
     to {opacity:1 ;}
 }
-
 </style>
 
 
@@ -110,13 +109,26 @@
 
 	<div class="row">
 		<div class="row text-center"><h2>{{list.name}}</h2>
-			<a href="{{url_for('ListDetails', list_id = lid)}}" class = "btn btn-primary col-md-2">List Details</a>
+
+			<!--
+			<a href="{{url_for('ListDetails', list_id = list.id)}}" class = "btn btn-primary col-md-2">List Details</a>
 			{% if logged_in == true %}
 				<span class = "col-md-8"></span><a href="{{url_for('HeadingList', list_id = lid)}}" class = "btn btn-primary col-md-2">Edit Headings</a>
 			{% else %}
 				<span class = "col-md-8"></span><a href="{{url_for('showLogin')}}" class = "btn btn-primary col-md-2">Edit Headings</a>
 			{% endif %}
+			-->
 
+		</div><br>
+		<div class="row">
+			<span class = "col-md-5"></span>
+			<a href="{{url_for('QueryList', list_id = lid)}}" 
+			title="Return to full list with all headings"
+			class = "btn btn-primary col-md-3">
+				Return to Full List
+			</a>
+			<span class = "col-md-4"></span>
+		</div>
 
 			<!-- This was originally the button for comments, but changed for editing columns  
 			{% if logged_in == true %}
@@ -124,30 +136,20 @@
 			{% else %}
 				<span class = "col-md-10"></span><a href="{{url_for('showLogin')}}" class = "btn btn-primary col-md-2">Comment</a>
 			{% endif %}-->
-		</div><br>
-
-		<div class="row">
-			<span class = "col-md-5"></span>
-			<a href="{{url_for('SelectShortList', list_id = lid)}}" 
-			title="Reduce the number of headings by selecting only the headings you want displayed in this list"
-			class = "btn btn-primary col-md-3">
-				Reduce Headings
-			</a>
-			<span class = "col-md-4"></span>
-		</div>
+		
 		<br>
 		<div class="table_scroll">
 			<table class="table table-bordered"><!-- table-condensed-->
 				<thead>
 					<tr>
-						<form action = "{{url_for('QueryList', list_id = lid)}}" method = 'POST'>
+						<form action = "{{url_for('QueryShortList', list_id = list.id)}}" method = 'POST'>
 						<!-- Eadit headings has moved up
 						<th>
 							{% if logged_in == true %}
 								<a href="{{url_for('HeadingList', list_id = lid)}}" >Edit/Del Headings</a>
 							{% else %}
 								<a href="{{url_for('showLogin')}}" >Edit/Del Headings</a>
-							{% endif %}      
+							{% endif %}
 						</th>  -->
 						<th colspan="2" >
 							<button type="submit" class = "btn btn-primary col-md-10">Re-order</button>
@@ -171,7 +173,7 @@
 								{% if row_creator_logged_in[loop.index-1] == True %}
 									<td>
 										<div class="col-md-2">
-											<a href="{{url_for('DeleteRow', list_id = lid, row_id = item[0])}}" class="text-right">Del</a>
+											<a href="{{url_for('DeleteRow', list_id = lid, row_id = item[0])}}" class="text-right" title = "This will delete the full entry, not only these headings">Del</a>
 										</div>
 									</td>
 								{% else %}
@@ -182,7 +184,8 @@
 										</div>
 									</td>
 								{% endif %}
-								<td><a href="{{url_for('EditRow', list_id = lid, row_id = item[0])}}" >Edit</a></td>
+								<td><a href="{{url_for('EditRow', list_id = lid, row_id = item[0])}}"
+									title = "This will take you out of your filtered list view to the edit page" >Edit</a></td>
 
 						{% else %}
 							<td><a href="{{url_for('showLogin')}}" >Del</a></td>
