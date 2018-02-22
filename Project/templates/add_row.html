@@ -25,12 +25,12 @@
 								<input type="text" class="form-control" id="exampleInputEmail1" name = "name_{{i}}" placeholder="Value for {{h_items[i].name}} and {{h_items[i].entry_data_type}}">
 								 <span class = "col-md-1"></span> -->
 								{% if (h_items[i].entry_data_type == 2)  %}
-									<input type="date" class="form-control" id="exampleInputEmail1" name = "name_{{i}}" placeholder="Value for {{h_items[i].entry_data_type}} and {{dt_tr[h_items[i].entry_data_type]}}">
+									<input type="date" class="form-control" id="exampleInputEmail1" name = "name_{{i}}" placeholder="{{dt_tr[i]}}">
 
 								{% elif (h_items[i].entry_data_type == 4) %}
-									<input type="time" class="form-control" id="exampleInputEmail1" name = "name_{{i}}" placeholder="Value for {{h_items[i].entry_data_type}} and {{dt_tr[h_items[i].entry_data_type]}}">
+									<input type="time" class="form-control" id="exampleInputEmail1" name = "name_{{i}}" placeholder="{{dt_tr[i]}}">
 								{% elif (h_items[i].entry_data_type == 5) %}
-									<input type="text" class="form-control" id="exampleInputEmail1" name = "name_{{i}}" placeholder="Value for {{h_items[i].entry_data_type}} and {{dt_tr[h_items[i].entry_data_type]}}">									
+									<input type="text" class="form-control" id="exampleInputEmail1" name = "name_{{i}}" placeholder="{{dt_tr[i]}}">									
 								{% elif (h_items[i].entry_data_type == 1) %}
 									<input type="number" step="1" class="form-control" id="exampleInputEmail1" name = "name_{{i}}" placeholder="Input a number">
 								{% elif (h_items[i].entry_data_type == 6) or (h_items[i].entry_data_type == 7) %}
@@ -43,7 +43,7 @@
 									<label>True/ Yes (Default) </label><input type="radio" class="form-control" id="exampleInputEmail1" name = "name_{{i}}" value = true checked>
 									<label>False/ No</label><input type="radio" class="form-control" id="exampleInputEmail1" name = "name_{{i}}" value = false>
 								{% else %}
-									<input type="text" class="form-control" id="exampleInputEmail1" name = "name_{{i}}" placeholder="Value for {{h_items[i].entry_data_type}} and {{dt_tr[h_items[i].entry_data_type]}}">
+									<input type="text" class="form-control" id="exampleInputEmail1" name = "name_{{i}}" placeholder="{{dt_tr[i]}}">
 								{% endif %}
 								</div>
 							</td>

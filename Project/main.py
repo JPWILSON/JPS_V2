@@ -45,11 +45,8 @@ data_types ={}
 for i in range(0,8):
 	data_types[i] = li_of_dtypes[i]
 #This is for when I need to access the TEXT (strings) of the different data types: 
+#Note - these should be removed, its ridiculous
 li_of_dtypes_str = ["TextEntry","IntegerEntry","DateEntry","TrueFalse","TimeEntry","Duration","TwoDecimal","LargeDecimal"]
-data_types_str ={}
-for i in range(0,8):
-	data_types_str[i] = li_of_dtypes_str[i]
-
 
 #data_types_tuple = [(0, 'TextEntry'),(1,'IntegerEntry'),(2,'DateEntry'),(3,'DateEntry'),(4,'TrueFalse'),(5,'TimeEntry'),(6, 'Duration'),(7,'TwoDecimal'),(8,'LargeDecimal')]
 data_types_tuple = [(0, 'TextEntry'),(1,'IntegerEntry'),(2,'DateEntry'),(3,'TrueFalse'),(4,'TimeEntry'),(5, 'Duration'),(6,'TwoDecimal'),(7,'LargeDecimal')]
@@ -400,8 +397,13 @@ rev = 0              #Whether to order ascending or descending
 @app.route('/<int:list_id>/', methods = ['GET', 'POST'])
 def QueryList(list_id):
 
+	#Clear the session heading shortlist (list of headings selected by user to view instead of whole list)
+	login_session['selected_headings'] = []
+
+
 	global order_by_heading
 	global rev
+
 
 #Logged in logic and rules (permissions, etc)
 	logged_in = False
@@ -410,10 +412,10 @@ def QueryList(list_id):
 		logged_in = True
 		un = login_session['username']
 
-
 	list_to_view = session.query(List).filter_by(id = list_id).first()
 	#heading_items = session.query(HeadingItem).filter_by(list_id = list_to_view.id).order_by(asc(HeadingItem.id))
-	heading_items = session.query(HeadingItem).filter_by(list_id = list_to_view.id).order_by(HeadingItem.id.asc())
+	#  This is the main one heading_items = session.query(HeadingItem).filter_by(list_id = list_to_view.id).order_by(HeadingItem.id.asc())
+	heading_items = session.query(HeadingItem).filter_by(list_id = list_to_view.id).order_by(HeadingItem.name.asc())
 	rows = session.query(Row).filter_by(list_id = list_to_view.id).order_by(Row.id.asc())
 	row_entries = {}
 
@@ -421,12 +423,9 @@ def QueryList(list_id):
 	owner_id = list_to_view.user_id
 	deletable_l = False # This is val passed to template about wether delete button (for lists) will do what's required or popup saying not allowed 
 	# to delete because not creator of ths thing (list, heading, row, entry)
-	#print "OWNER IS: ",owner.user_name, "un is: ", un
 	owner = session.query(User).filter_by(id = owner_id).one()
 	if owner.user_name == un:
 		deletable_l = True
-
-
 
 	for row in rows:
 		#row_entries[row.id] = session.query(TextEntry).filter_by(row_id = row.id).order_by(TextEntry.heading_id).all()
@@ -434,7 +433,8 @@ def QueryList(list_id):
 		for e in li_of_dtypes[1:]:
 			for i in (session.query(e).filter_by(row_id = row.id).all()):
 				row_entries[row.id].append(i)
-		(row_entries[row.id]).sort(key=lambda x: int(x.heading_id))
+		#(row_entries[row.id]).sort(key=lambda x: int(x.heading_id))
+		(row_entries[row.id]).sort(key=lambda x: str(x.heading.name))#, reverse = True)
 		#(row_entries[row.id]).sort(key=lambda x: int(x.entry))   - not working
 
 	#The line below converts the dictionary into a list of tuples where tuple is len2 1st item key, item 2 is a list of data entry objects
@@ -452,18 +452,114 @@ def QueryList(list_id):
 			row_creator_logged_in.append(False)
 
 
-
 	if request.method == 'POST':
-		order_by_heading = int(request.form["heading"][:1])-1
-		rev = int(request.form["heading"][1:])
+		order_by_heading = int(request.form["heading"][:-1])-1
+		rev = int(request.form["heading"][-1:])
 		return redirect(url_for('QueryList', list_id = list_id))
 	else:
 		return render_template('view.html', list = list_to_view, h_items = heading_items, rows = rows, 
-								lid = list_id, data_types_str = data_types_str, logged_in=logged_in, 
+								lid = list_id, logged_in=logged_in, 
 								un=un, deletable_l = deletable_l, sorted_rows = sorted_rows, 
 								row_creator_logged_in = row_creator_logged_in)
-	#return "A single list that you can view or inspect/query (this should be the most important\
-	#feature, and \n it is from here that you would add to the list (edit). list{}".format(list_id)
+
+@app.route('/select_headings/<int:list_id>', methods = ['GET', 'POST'])
+def SelectShortList(list_id):
+	list_to_view = session.query(List).filter_by(id = list_id).first()
+	heading_items = session.query(HeadingItem).filter_by(list_id = list_to_view.id).order_by(HeadingItem.name.asc())
+	if request.method == 'POST':
+		heading_ids = request.form.getlist("heading")
+		login_session['selected_headings'] = heading_ids
+		return redirect(url_for('QueryShortList', list_id = list_id))
+	else:
+		return render_template('shortlist_choice.html', list = list_to_view, heading_items = heading_items)
+
+
+@app.route('/<int:list_id>/shortlist', methods = ['GET', 'POST'])
+def QueryShortList(list_id):
+
+	global order_by_heading
+	global rev
+
+#Logged in logic and rules (permissions, etc)
+	logged_in = False
+	un = ''
+	if 'username' in login_session:
+		logged_in = True
+		un = login_session['username']
+
+	list_to_view = session.query(List).filter_by(id = list_id).first()
+	# I can retrieve every heading object in the 'if method == post' section, where they are appended to a list
+	rows = session.query(Row).filter_by(list_id = list_to_view.id).order_by(Row.id.asc())
+	row_entries = {}
+
+	heading_ids = []
+	h_names = []
+	for i in login_session['selected_headings']:
+		heading_ids.append(int(i))
+	heading_items = []
+	heading_items_orig = session.query(HeadingItem).filter_by(list_id = list_to_view.id).order_by(HeadingItem.name.asc())
+	for e in heading_items_orig:
+		if e.id in heading_ids:
+			h_names.append(e.name)
+			heading_items.append(e)
+
+
+	#Defining the logic determining creator of item (only person allowed to delete)
+	owner_id = list_to_view.user_id
+	deletable_l = False # This is val passed to template about wether delete button (for lists) will do what's required or popup saying not allowed 
+	# to delete because not creator of ths thing (list, heading, row, entry)
+	#print "OWNER IS: ",owner.user_name, "un is: ", un
+	owner = session.query(User).filter_by(id = owner_id).one()
+	if owner.user_name == un:
+		deletable_l = True
+
+	row_entries = {}	
+	for row in rows:
+		#row_entries[row.id] = session.query(TextEntry).filter_by(row_id = row.id).order_by(TextEntry.heading_id).all()
+		row_entries[row.id] = session.query(TextEntry).filter_by(row_id = row.id).order_by(TextEntry.heading_id).all()
+		for e in li_of_dtypes[1:]:
+			for i in (session.query(e).filter_by(row_id = row.id).all()):
+				row_entries[row.id].append(i)
+		#(row_entries[row.id]).sort(key=lambda x: int(x.heading_id))
+		(row_entries[row.id]).sort(key=lambda x: str(x.heading.name))#, reverse = True)
+		#(row_entries[row.id]).sort(key=lambda x: int(x.entry))   - not working
+
+	#The line below converts the dictionary into a list of tuples where tuple is len2 1st item key, item 2 is a list of data entry objects
+	sorted_rows = sorted(row_entries.items(), key = lambda x: x[1][order_by_heading].entry, reverse = rev)
+
+	#Now, going through the rows to remove the irrelevant headings: 
+	for e in sorted_rows:
+		for ent in e[1]:
+			if ent.heading_id not in heading_ids:
+				e[1].remove(ent)
+
+	sorted_rows = sorted(sorted_rows, key = lambda x: x[1][order_by_heading].entry, reverse = rev)
+
+
+	#Logic for deleting a row entry: 
+	row_creator_logged_in = []
+	for r in sorted_rows:
+		row2check = session.query(Row).filter_by(id = r[0]).one()
+		row_creator_id = row2check.user_id
+		row_creator = session.query(User).filter_by(id = row_creator_id).one()
+		if row_creator.user_name == un:
+			row_creator_logged_in.append(True)
+		else:
+			row_creator_logged_in.append(False)
+
+	if request.method == 'POST':
+		order_by_heading = int(request.form["heading"][:-1])-1
+		rev = int(request.form["heading"][-1:])
+		return redirect(url_for('QueryShortList', list_id = list_id))
+	else:
+		return render_template('view_shortlist.html', list = list_to_view, h_names = h_names, rows = rows, 
+								lid = list_id, logged_in=logged_in, h_items = heading_items,
+								un=un, deletable_l = deletable_l, sorted_rows = sorted_rows, 
+								row_creator_logged_in = row_creator_logged_in)
+
+
+
+
 
 @app.route('/<int:list_id>/new_col/', methods = ['GET', 'POST'])
 def AddColumn(list_id):
@@ -656,7 +752,7 @@ def AddRow(list_id):
 		flash("Well done! You created a new row with ID: {}.".format(new_row.id))
 		return redirect(url_for('QueryList', list_id = list_id))
 	else:
-		return render_template('add_row.html', list_id = list_id, h_items = heading_items, dt_tr = data_types_str,
+		return render_template('add_row.html', list_id = list_id, h_items = heading_items, dt_tr = li_of_dtypes_str,
 			list = list_to_add_to, logged_in=logged_in, un=un)
 	#return "Add a new row to your list. That is, a new entry (and therefore increase the usefulness of your list with id: {}). ".format(list_id)
 

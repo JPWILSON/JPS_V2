@@ -59,6 +59,7 @@
     from {opacity: 0;}
     to {opacity:1 ;}
 }
+
 </style>
 
 
@@ -124,6 +125,17 @@
 				<span class = "col-md-10"></span><a href="{{url_for('showLogin')}}" class = "btn btn-primary col-md-2">Comment</a>
 			{% endif %}-->
 		</div><br>
+
+		<div class="row">
+			<span class = "col-md-5"></span>
+			<a href="{{url_for('SelectShortList', list_id = lid)}}" 
+			title="Reduce the number of headings by selecting only the headings you want displayed in this list"
+			class = "btn btn-primary col-md-3">
+				Reduce Headings
+			</a>
+			<span class = "col-md-4"></span>
+		</div>
+		<br>
 		<div class="table_scroll">
 			<table class="table table-bordered"><!-- table-condensed-->
 				<thead>
@@ -135,7 +147,7 @@
 								<a href="{{url_for('HeadingList', list_id = lid)}}" >Edit/Del Headings</a>
 							{% else %}
 								<a href="{{url_for('showLogin')}}" >Edit/Del Headings</a>
-							{% endif %}
+							{% endif %}      
 						</th>  -->
 						<th colspan="2" >
 							<button type="submit" class = "btn btn-primary col-md-10">Re-order</button>
@@ -148,13 +160,7 @@
 						{% endfor %}
 						</form>
 					</tr>
-					<!--<tr>
-						<th>(Integer)</th>
-						{% for h in h_items %}
-						<th>({{data_types_str[h.entry_data_type]}})</th>
-						{% endfor %}
-						<th></th>
-					</tr>-->
+
 				</thead>
 				<tbody>
 					{% for item in sorted_rows %}
