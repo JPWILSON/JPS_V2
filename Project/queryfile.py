@@ -11,22 +11,22 @@ DBSession = sessionmaker(bind = engine)
 session = DBSession()
 """
 li = []
-li.append(1)
+for i in range(11):
+	li.append(i)
+
+print li, "done"
+
+li2 = [(l*l-2*l) for l in li]
+print li2
+
+li3 = list(set(li).intersection(li2))
+print li3
+
+li4 = []
+for e in li2:
+	li4.append((e,[(k-1) for k in li[:3]]))
 
 
-li.append((3,"four"))
-
-[li.append(i) for i in range(0,11)]
-
-print li 
-
-for i in li:
-	if type(i) == int:
-		if i%2 == 0:
-			print "about to remove: ", i
-			li.remove(i)
-
-print "Now, the list is:: ", li
 
 """
 a = 1

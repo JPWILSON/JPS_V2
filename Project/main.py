@@ -397,9 +397,7 @@ rev = 0              #Whether to order ascending or descending
 @app.route('/<int:list_id>/', methods = ['GET', 'POST'])
 def QueryList(list_id):
 
-	#Clear the session heading shortlist (list of headings selected by user to view instead of whole list)
 	login_session['selected_headings'] = []
-
 
 	global order_by_heading
 	global rev
@@ -411,6 +409,7 @@ def QueryList(list_id):
 	if 'username' in login_session:
 		logged_in = True
 		un = login_session['username']
+
 
 	list_to_view = session.query(List).filter_by(id = list_id).first()
 	#heading_items = session.query(HeadingItem).filter_by(list_id = list_to_view.id).order_by(asc(HeadingItem.id))
@@ -480,6 +479,9 @@ def QueryShortList(list_id):
 	global order_by_heading
 	global rev
 
+
+	print "lets check the length of the login session headings selected flwd by each id: ", len(login_session['selected_headings']),\
+	[int(e) for e in login_session['selected_headings'] ]
 #Logged in logic and rules (permissions, etc)
 	logged_in = False
 	un = ''
@@ -493,15 +495,16 @@ def QueryShortList(list_id):
 	row_entries = {}
 
 	heading_ids = []
-	h_names = []
 	for i in login_session['selected_headings']:
 		heading_ids.append(int(i))
+	print heading_ids, "these are the selected heading ids"
 	heading_items = []
 	heading_items_orig = session.query(HeadingItem).filter_by(list_id = list_to_view.id).order_by(HeadingItem.name.asc())
 	for e in heading_items_orig:
 		if e.id in heading_ids:
-			h_names.append(e.name)
 			heading_items.append(e)
+
+	heading_items.sort(key=lambda x: str(x.name))
 
 
 	#Defining the logic determining creator of item (only person allowed to delete)
@@ -513,29 +516,33 @@ def QueryShortList(list_id):
 	if owner.user_name == un:
 		deletable_l = True
 
-	row_entries = {}	
+	row_entries = {}
 	for row in rows:
-		#row_entries[row.id] = session.query(TextEntry).filter_by(row_id = row.id).order_by(TextEntry.heading_id).all()
 		row_entries[row.id] = session.query(TextEntry).filter_by(row_id = row.id).order_by(TextEntry.heading_id).all()
 		for e in li_of_dtypes[1:]:
 			for i in (session.query(e).filter_by(row_id = row.id).all()):
 				row_entries[row.id].append(i)
-		#(row_entries[row.id]).sort(key=lambda x: int(x.heading_id))
+
 		(row_entries[row.id]).sort(key=lambda x: str(x.heading.name))#, reverse = True)
 		#(row_entries[row.id]).sort(key=lambda x: int(x.entry))   - not working
 
-	#The line below converts the dictionary into a list of tuples where tuple is len2 1st item key, item 2 is a list of data entry objects
-	sorted_rows = sorted(row_entries.items(), key = lambda x: x[1][order_by_heading].entry, reverse = rev)
-
-	#Now, going through the rows to remove the irrelevant headings: 
-	for e in sorted_rows:
-		for ent in e[1]:
-			if ent.heading_id not in heading_ids:
-				e[1].remove(ent)
-
-	sorted_rows = sorted(sorted_rows, key = lambda x: x[1][order_by_heading].entry, reverse = rev)
 
 
+	'''print "reading out all the (k, v) pairs of a list: "
+	print row_entries.items()
+	print "done with that :) "'''
+
+	orig_sorted_rows = sorted(row_entries.items(), key = lambda x: x[1][order_by_heading].entry, reverse = rev)
+	sorted_rows = []
+	for i in range(0, len(orig_sorted_rows)):
+		sorted_rows.append((orig_sorted_rows[i][0],[]))
+		for ele in orig_sorted_rows[i][1]:
+			if ele.heading_id in heading_ids:
+				sorted_rows[i][1].append(ele)
+		sorted_rows[i][1].sort(key=lambda x: str(x.heading.name))
+	print "done after"
+
+	sorted_rows.sort(key = lambda x: x[1][order_by_heading].entry, reverse = rev)
 	#Logic for deleting a row entry: 
 	row_creator_logged_in = []
 	for r in sorted_rows:
@@ -547,12 +554,14 @@ def QueryShortList(list_id):
 		else:
 			row_creator_logged_in.append(False)
 
+
+
 	if request.method == 'POST':
 		order_by_heading = int(request.form["heading"][:-1])-1
 		rev = int(request.form["heading"][-1:])
 		return redirect(url_for('QueryShortList', list_id = list_id))
 	else:
-		return render_template('view_shortlist.html', list = list_to_view, h_names = h_names, rows = rows, 
+		return render_template('view_shortlist.html', list = list_to_view, rows = rows, 
 								lid = list_id, logged_in=logged_in, h_items = heading_items,
 								un=un, deletable_l = deletable_l, sorted_rows = sorted_rows, 
 								row_creator_logged_in = row_creator_logged_in)
