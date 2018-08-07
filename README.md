@@ -3,7 +3,7 @@
 ## Overview
 
 This was my idea for a cool startup, but I did not make a nice front end, and I think either the concept doesn't make sense, or 
-I am ahead of my time lol. 
+I am ahead of my time lol. Read the [about](http://supalist.co/about/) page for a cheesy, cringy description, and leave some feedback via the [contact](mailto:supalist1@gmail.com?Subject=FeedbackViaGithub) section if you have the time. Thanks.
 
 There is a psql database connected to a Flask app via sqlalchemy. 
 
