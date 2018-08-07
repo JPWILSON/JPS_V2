@@ -7,7 +7,7 @@ I am ahead of my time lol.
 
 It is a web application with a psql database connected to a Flask app via sqlalchemy. 
 
-[Here](http://supalist.co/) here it is live, it is hosted on an AWS, EC2 instance. As you can see if you try add lists, you will need
+[Here](http://supalist.co/) it is live, it is hosted on an AWS, EC2 instance. As you can see if you try add lists, you will need
 a google account - it makes use of OAuth2. Read the [about](http://supalist.co/about/) page for a cheesy, cringy description, and leave some feedback [contact](mailto:supalist1@gmail.com?Subject=FeedbackViaGithub) if you have the time to take a look. Thanks.
 
 It is a recent demo project, but if you are looking from your mobile, you will notice it is not exactly the most mobile friendly front end. 
